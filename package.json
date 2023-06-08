@@ -1,0 +1,30 @@
+{
+  "private": true,
+  "name": "trick-spot",
+  "author": "Craig Myles",
+  "license": "MIT",
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/trick-spot-core"
+    ]
+  },
+  "scripts": {
+    "start:emulators:test": "firebase emulators:start --project=trickspot-20ae3 --only 'auth,firestore,storage'",
+    "start:emulators": "firebase emulators:start --import=./emulator --project=trickspot-20ae3 --export-on-exit",
+    "workspace:build:functions": "yarn workspace trick-spot-functions build",
+    "workspace:start:functions": "yarn workspace trick-spot-functions build:watch",
+    "workspace:build:api": "yarn workspace trick-spot-api build",
+    "workspace:start:api": "yarn workspace trick-spot-api start",
+    "build:functions": "run-s workspace:build:functions",
+    "build:api": "run-s workspace:build:api",
+    "deploy:functions": "firebase deploy --only functions"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.9.0"
+  }
+}
