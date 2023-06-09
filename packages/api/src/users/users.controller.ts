@@ -32,7 +32,7 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   async findOne(@Req() req: AuthRequest) {
     const user = await this.usersService.findOne(req.params.id);
-    return new UserEntity(user);
+    return new UserEntity(user.toJson());
   }
 
   @Post()
@@ -40,7 +40,7 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   async create(@Req() req: AuthRequest, @Body() userDto: UserCreateDto) {
     const newUser = await this.usersService.create(userDto, req.userId);
-    return new UserEntity(newUser);
+    return new UserEntity(newUser.toJson());
   }
 
   @Put(':id')
@@ -50,7 +50,7 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   async update(@Req() req: AuthRequest, @Body() userDto: UserUpdateDto) {
     const updatedUser = await this.usersService.update(userDto, req.userId);
-    return new UserEntity(updatedUser);
+    return new UserEntity(updatedUser.toJson());
   }
 
   @Patch(':id')
@@ -60,7 +60,7 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   async patch(@Req() req: AuthRequest, @Body() userDto: UserPatchDto) {
     const updatedUser = await this.usersService.patch(userDto, req.userId);
-    return new UserEntity(updatedUser);
+    return new UserEntity(updatedUser.toJson());
   }
 
   @Put(':id/image')
