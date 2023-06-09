@@ -56,7 +56,9 @@ describe('Authentication middleware', () => {
       appId: '1:1042573471065:web:041e016bcfa73593aeb048',
       measurementId: 'G-GES4385QPR',
     });
-    connectAuthEmulator(getAuth(), 'http://127.0.0.1:9099');
+    connectAuthEmulator(getAuth(), 'http://127.0.0.1:9099', {
+      disableWarnings: true,
+    });
     await app.init();
   });
 

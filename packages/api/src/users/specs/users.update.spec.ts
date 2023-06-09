@@ -34,7 +34,9 @@ describe('Users controller UPDATE ', () => {
       appId: '1:1042573471065:web:041e016bcfa73593aeb048',
       measurementId: 'G-GES4385QPR',
     });
-    connectAuthEmulator(getAuth(), 'http://127.0.0.1:9099');
+    connectAuthEmulator(getAuth(), 'http://127.0.0.1:9099', {
+      disableWarnings: true,
+    });
     await admin.app().auth().createUser({
       email: 'testUserUpdate@test.com',
       password: '11111111',
@@ -98,6 +100,7 @@ describe('Users controller UPDATE ', () => {
     expect(Number.isInteger(test.body.lastUpdate)).toBeTruthy();
     expect(test.body.banished === false).toBeTruthy();
     expect(test.body.email).toBeUndefined();
+    expect(test.body.createdAt).toBeDefined();
   });
   it('should return 404', async () => {
     await admin.app().auth().createUser({

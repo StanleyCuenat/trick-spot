@@ -7,6 +7,7 @@ export interface FirebaseUserEntity {
   banished: boolean;
   lastConnection: Timestamp;
   lastUpdate: Timestamp;
+  createdAt: Timestamp;
   links: string[];
   email: string;
 }

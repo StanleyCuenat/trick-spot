@@ -35,7 +35,9 @@ describe('/users/:id GET', () => {
       appId: '1:1042573471065:web:041e016bcfa73593aeb048',
       measurementId: 'G-GES4385QPR',
     });
-    connectAuthEmulator(getAuth(), 'http://127.0.0.1:9099');
+    connectAuthEmulator(getAuth(), 'http://127.0.0.1:9099', {
+      disableWarnings: true,
+    });
     await admin.app().auth().createUser({
       email: 'testUserGet@test.com',
       password: '11111111',
@@ -73,6 +75,7 @@ describe('/users/:id GET', () => {
     expect(Number.isInteger(test.body.lastUpdate)).toBeTruthy();
     expect(test.body.banished === false).toBeTruthy();
     expect(test.body.email).toBeUndefined();
+    expect(test.body.createdAt).toBeDefined();
   });
   afterAll(async () => {
     if (userId) {

@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   ParseFilePipeBuilder,
+  Patch,
   Post,
   Put,
   Req,
@@ -16,15 +17,23 @@ import { AuthRequest } from 'src/core/core.interface';
 import { UserCreateDto, userCreateSchema } from './dto/user-create.dto';
 import { JoiValidationPipe } from 'src/core/validation.pipe';
 import { UsersService } from './users.service';
-import { userUpdateSchema } from './dto/user-update.dto';
+import { UserUpdateDto, userUpdateSchema } from './dto/user-update.dto';
 import { Owner } from 'src/auth/owner.decorator';
 import { OwnerAcl } from 'src/auth/owner.guard';
 import { UserEntity } from './users.serializer';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { UserPatchDto, userPatchSchema } from './dto/user-patch.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
+
+  @Get(':id')
+  @UseInterceptors(ClassSerializerInterceptor)
+  async findOne(@Req() req: AuthRequest) {
+    const user = await this.usersService.findOne(req.params.id);
+    return new UserEntity(user);
+  }
 
   @Post()
   @UsePipes(new JoiValidationPipe(userCreateSchema))
@@ -39,8 +48,18 @@ export class UsersController {
   @UseGuards(OwnerAcl)
   @UsePipes(new JoiValidationPipe(userUpdateSchema))
   @UseInterceptors(ClassSerializerInterceptor)
-  async update(@Req() req: AuthRequest, @Body() userDto: UserCreateDto) {
+  async update(@Req() req: AuthRequest, @Body() userDto: UserUpdateDto) {
     const updatedUser = await this.usersService.update(userDto, req.userId);
+    return new UserEntity(updatedUser);
+  }
+
+  @Patch(':id')
+  @Owner('id')
+  @UseGuards(OwnerAcl)
+  @UsePipes(new JoiValidationPipe(userPatchSchema))
+  @UseInterceptors(ClassSerializerInterceptor)
+  async patch(@Req() req: AuthRequest, @Body() userDto: UserPatchDto) {
+    const updatedUser = await this.usersService.patch(userDto, req.userId);
     return new UserEntity(updatedUser);
   }
 
@@ -58,17 +77,6 @@ export class UsersController {
     file: Express.Multer.File,
     @Req() req: AuthRequest,
   ) {
-    try {
-      return await this.usersService.updateImage(file, req.userId);
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  @Get(':id')
-  @UseInterceptors(ClassSerializerInterceptor)
-  async findOne(@Req() req: AuthRequest) {
-    const user = await this.usersService.findOne(req.params.id);
-    return new UserEntity(user);
+    return await this.usersService.updateImage(file, req.userId);
   }
 }
