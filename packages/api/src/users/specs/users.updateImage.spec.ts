@@ -96,5 +96,6 @@ describe('/users/:id/image PUT', () => {
     if (userId) {
       admin.auth().deleteUser(userId);
     }
+    await app.close();
   });
 });

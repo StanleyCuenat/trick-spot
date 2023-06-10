@@ -71,22 +71,23 @@ describe('/users/:id GET', () => {
     expect(test.body.nickname === 'GET').toBeTruthy();
     expect(test.body.description === 'GET').toBeTruthy();
     expect(Array.isArray(test.body.links)).toBeTruthy();
-    expect(Number.isInteger(test.body.lastConnection)).toBeTruthy();
-    expect(Number.isInteger(test.body.lastUpdate)).toBeTruthy();
+    expect(Number.isInteger(test.body.lastConnection.seconds)).toBeTruthy();
+    expect(Number.isInteger(test.body.lastUpdate.seconds)).toBeTruthy();
     expect(test.body.banished === false).toBeTruthy();
     expect(test.body.email).toBeUndefined();
-    expect(test.body.createdAt).toBeDefined();
+    expect(test.body.createdAt.seconds).toBeDefined();
   });
-  afterAll(async () => {
-    if (userId) {
-      await admin.auth().deleteUser(userId);
-    }
-  });
-
   it('should return 404', async () => {
     return request(app.getHttpServer())
       .get(`/users/notExist`)
       .set({ authorization: `Bearer ${token}` })
       .expect(404);
+  });
+
+  afterAll(async () => {
+    if (userId) {
+      await admin.auth().deleteUser(userId);
+    }
+    await app.close();
   });
 });

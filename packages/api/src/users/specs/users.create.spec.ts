@@ -109,10 +109,10 @@ describe('Users controller CREATE', () => {
     expect(test.body.nickname === 'testUser').toBeTruthy();
     expect(test.body.description === 'test description').toBeTruthy();
     expect(Array.isArray(test.body.links)).toBeTruthy();
-    expect(Number.isInteger(test.body.lastConnection)).toBeTruthy();
-    expect(Number.isInteger(test.body.lastUpdate)).toBeTruthy();
+    expect(Number.isInteger(test.body.lastConnection.seconds)).toBeTruthy();
+    expect(Number.isInteger(test.body.lastUpdate.seconds)).toBeTruthy();
     expect(test.body.banished === false).toBeTruthy();
-    expect(test.body.createdAt).toBeDefined();
+    expect(test.body.createdAt.seconds).toBeDefined();
     expect(test.body.email).toBeUndefined();
     return request(app.getHttpServer())
       .post('/users')

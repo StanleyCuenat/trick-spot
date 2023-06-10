@@ -1,7 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
-import { AuthRequest } from 'src/core/core.interface';
+import { AuthRequest } from 'src/core/interface/authRequest.interface';
 
 @Injectable()
 export class OwnerAcl implements CanActivate {

@@ -6,9 +6,18 @@ interface FirebaseUserEntity {
   nickname: string;
   description: string;
   banished: boolean;
-  lastConnection: Timestamp;
-  lastUpdate: Timestamp;
-  createdAt: Timestamp;
+  lastConnection: {
+    seconds: number;
+    nanoseconds: number;
+  };
+  lastUpdate: {
+    seconds: number;
+    nanoseconds: number;
+  };
+  createdAt: {
+    seconds: number;
+    nanoseconds: number;
+  };
   links: string[];
   email: string;
 }
@@ -18,9 +27,18 @@ export class FirebaseUserEntityDto {
   private readonly nickname: string;
   private readonly description: string;
   private readonly banished: boolean;
-  private readonly lastConnection: Timestamp;
-  private readonly lastUpdate: Timestamp;
-  private readonly createdAt: Timestamp;
+  private readonly lastConnection: {
+    seconds: number;
+    nanoseconds: number;
+  };
+  private readonly lastUpdate: {
+    seconds: number;
+    nanoseconds: number;
+  };
+  private readonly createdAt: {
+    seconds: number;
+    nanoseconds: number;
+  };
   private readonly links: string[];
   private readonly email: string;
   constructor(data: Record<string, unknown>) {
@@ -60,18 +78,18 @@ export class FirebaseUserEntityDto {
     this.nickname = data.nickname as string;
     this.description = data.description as string;
     this.banished = data.banished as boolean;
-    this.lastConnection = new Timestamp(
-      (data.lastConnection as any).seconds as number,
-      (data.lastConnection as any).nanoseconds as number,
-    );
-    this.lastUpdate = new Timestamp(
-      (data.lastUpdate as any).seconds as number,
-      (data.lastUpdate as any).nanoseconds as number,
-    );
-    this.createdAt = new Timestamp(
-      (data.createdAt as any).seconds as number,
-      (data.createdAt as any).nanoseconds as number,
-    );
+    this.lastConnection = {
+      seconds: (data.lastConnection as any).seconds as number,
+      nanoseconds: (data.lastConnection as any).nanoseconds as number,
+    };
+    this.lastUpdate = {
+      seconds: (data.lastUpdate as any).seconds as number,
+      nanoseconds: (data.lastUpdate as any).nanoseconds as number,
+    };
+    this.createdAt = {
+      seconds: (data.createdAt as any).seconds as number,
+      nanoseconds: (data.createdAt as any).nanoseconds as number,
+    };
     this.links = data.links as string[];
     this.email = data.email as string;
   }

@@ -101,14 +101,14 @@ describe('Users controller PATCH ', () => {
         lastUpdate: now,
       })
       .expect(200);
-    expect(test.body.lastConnection === now).toBeTruthy();
-    expect(test.body.lastUpdate === now).toBeTruthy();
+    expect(test.body.lastConnection.seconds === now).toBeTruthy();
+    expect(test.body.lastUpdate.seconds === now).toBeTruthy();
     expect(test.body.id === userId).toBeTruthy();
     expect(test.body.nickname).toBeDefined();
     expect(test.body.description).toBeDefined();
     expect(Array.isArray(test.body.links)).toBeTruthy();
-    expect(Number.isInteger(test.body.lastConnection)).toBeTruthy();
-    expect(Number.isInteger(test.body.lastUpdate)).toBeTruthy();
+    expect(Number.isInteger(test.body.lastConnection.seconds)).toBeTruthy();
+    expect(Number.isInteger(test.body.lastUpdate.seconds)).toBeTruthy();
     expect(test.body.banished === false).toBeTruthy();
     expect(test.body.email).toBeUndefined();
     expect(test.body.createdAt).toBeDefined();
@@ -123,14 +123,14 @@ describe('Users controller PATCH ', () => {
         lastConnection: now,
       })
       .expect(200);
-    expect(test.body.lastConnection === now).toBeTruthy();
-    expect(test.body.lastUpdate).toBeDefined();
+    expect(test.body.lastConnection.seconds === now).toBeTruthy();
+    expect(test.body.lastUpdate.seconds).toBeDefined();
     expect(test.body.id === userId).toBeTruthy();
     expect(test.body.nickname).toBeDefined();
     expect(test.body.description).toBeDefined();
     expect(Array.isArray(test.body.links)).toBeTruthy();
-    expect(Number.isInteger(test.body.lastConnection)).toBeTruthy();
-    expect(Number.isInteger(test.body.lastUpdate)).toBeTruthy();
+    expect(Number.isInteger(test.body.lastConnection.seconds)).toBeTruthy();
+    expect(Number.isInteger(test.body.lastUpdate.seconds)).toBeTruthy();
     expect(test.body.banished === false).toBeTruthy();
     expect(test.body.email).toBeUndefined();
     expect(test.body.createdAt).toBeDefined();
@@ -146,13 +146,13 @@ describe('Users controller PATCH ', () => {
       })
       .expect(200);
     expect(test.body.lastConnection).toBeDefined();
-    expect(test.body.lastUpdate === now).toBeTruthy();
+    expect(test.body.lastUpdate.seconds === now).toBeTruthy();
     expect(test.body.id === userId).toBeTruthy();
     expect(test.body.nickname).toBeDefined();
     expect(test.body.description).toBeDefined();
     expect(Array.isArray(test.body.links)).toBeTruthy();
-    expect(Number.isInteger(test.body.lastConnection)).toBeTruthy();
-    expect(Number.isInteger(test.body.lastUpdate)).toBeTruthy();
+    expect(Number.isInteger(test.body.lastConnection.seconds)).toBeTruthy();
+    expect(Number.isInteger(test.body.lastUpdate.seconds)).toBeTruthy();
     expect(test.body.banished === false).toBeTruthy();
     expect(test.body.email).toBeUndefined();
     expect(test.body.createdAt).toBeDefined();

@@ -11,7 +11,7 @@ import { getUnixTime } from 'date-fns';
 import { UserUpdateDto } from './dto/user-update.dto';
 import { UserPatchDto } from './dto/user-patch.dto';
 import { Timestamp } from 'firebase-admin/firestore';
-import { FirebaseUserEntityDto } from './dto/user-firebase';
+import { FirebaseUserEntityDto } from './dto/user-firebase.dto';
 
 @Injectable()
 export class UsersService {
@@ -35,7 +35,7 @@ export class UsersService {
     userDto: UserCreateDto,
     id: string,
   ): Promise<FirebaseUserEntityDto> {
-    const now = getUnixTime(new Date());
+    const now = Timestamp.now();
     const doc = await this.firebase.firestore.doc(`users/${id}`).get();
     const authUser = await this.firebase.auth.getUser(id);
     if (doc.exists === true) {
@@ -47,18 +47,18 @@ export class UsersService {
     await this.firebase.firestore.doc(`users/${id}`).create({
       ...userDto,
       banished: false,
-      lastConnection: new admin.firestore.Timestamp(now, 0),
-      lastUpdate: new admin.firestore.Timestamp(now, 0),
-      createdAt: new admin.firestore.Timestamp(now, 0),
+      lastConnection: now,
+      lastUpdate: now,
+      createdAt: now,
       email: authUser.email,
     });
     return new FirebaseUserEntityDto({
       id: id,
       ...userDto,
       banished: false,
-      lastConnection: new admin.firestore.Timestamp(now, 0),
-      lastUpdate: new admin.firestore.Timestamp(now, 0),
-      createdAt: new admin.firestore.Timestamp(now, 0),
+      lastConnection: now,
+      lastUpdate: now,
+      createdAt: now,
       email: authUser.email,
     });
   }
@@ -67,11 +67,11 @@ export class UsersService {
     userDto: UserUpdateDto,
     userId: string,
   ): Promise<FirebaseUserEntityDto> {
-    const now = getUnixTime(new Date());
+    const now = Timestamp.now();
     const user = await this.getUser(userId);
     await this.firebase.firestore.doc(`users/${userId}`).update({
       ...userDto,
-      lastUpdate: new admin.firestore.Timestamp(now, 0),
+      lastUpdate: now,
     });
     return new FirebaseUserEntityDto({
       ...user,

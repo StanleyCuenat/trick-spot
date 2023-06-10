@@ -10,11 +10,15 @@ export class UserEntity {
 
   banished: boolean;
 
-  @Transform(({ value }) => value.seconds)
-  lastConnection: Timestamp;
+  lastConnection: {
+    seconds: number;
+    nanoseconds: number;
+  };
 
-  @Transform(({ value }) => value.seconds)
-  lastUpdate: Timestamp;
+  lastUpdate: {
+    seconds: number;
+    nanoseconds: number;
+  };
 
   links: string[];
 

@@ -5,7 +5,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { NextFunction } from 'express';
-import { AuthRequest } from 'src/core/core.interface';
+import { AuthRequest } from 'src/core/interface/authRequest.interface';
 import { InjectFirebaseAdmin } from 'src/firebase/firebase.decorator';
 import { FirebaseAdmin } from 'src/firebase/firebase.interface';
 
@@ -16,7 +16,7 @@ export class AuthMiddleware implements NestMiddleware {
     this.firebase = firebase;
   }
 
-  async use(req: AuthRequest, res: Response, next: NextFunction) {
+  async use(req: AuthRequest, _: Response, next: NextFunction) {
     const token = req.headers.authorization;
     if (!token) {
       throw new HttpException(

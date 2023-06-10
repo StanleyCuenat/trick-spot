@@ -96,11 +96,11 @@ describe('Users controller UPDATE ', () => {
     expect(test.body.description === 'test description updated').toBeTruthy();
     expect(Array.isArray(test.body.links)).toBeTruthy();
     expect(test.body.links.length === 1).toBeTruthy();
-    expect(Number.isInteger(test.body.lastConnection)).toBeTruthy();
-    expect(Number.isInteger(test.body.lastUpdate)).toBeTruthy();
+    expect(Number.isInteger(test.body.lastConnection.seconds)).toBeTruthy();
+    expect(Number.isInteger(test.body.lastUpdate.seconds)).toBeTruthy();
     expect(test.body.banished === false).toBeTruthy();
     expect(test.body.email).toBeUndefined();
-    expect(test.body.createdAt).toBeDefined();
+    expect(test.body.createdAt.seconds).toBeDefined();
   });
   it('should return 404', async () => {
     await admin.app().auth().createUser({

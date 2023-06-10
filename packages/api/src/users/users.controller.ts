@@ -13,7 +13,7 @@ import {
   UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
-import { AuthRequest } from 'src/core/core.interface';
+import { AuthRequest } from 'src/core/interface/authRequest.interface';
 import { UserCreateDto, userCreateSchema } from './dto/user-create.dto';
 import { JoiValidationPipe } from 'src/core/validation.pipe';
 import { UsersService } from './users.service';
