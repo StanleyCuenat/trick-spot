@@ -1,16 +1,29 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { InjectFirebaseAdmin } from 'src/firebase/firebase.decorator';
 import { FirebaseAdmin } from 'src/firebase/firebase.interface';
 import { PostCreateDto } from './dto/post-create.dto';
 import { PostDbDto } from './dto/post-db.dto';
 import { GeoPoint, Timestamp } from 'firebase-admin/firestore';
 import * as geofire from 'geofire-common';
+import { PostUpdateDto } from './dto/post-update.dto';
 
 @Injectable()
 export class PostService {
   private readonly firebase: FirebaseAdmin;
   constructor(@InjectFirebaseAdmin() firebase: FirebaseAdmin) {
     this.firebase = firebase;
+  }
+
+  async getOne(id: string): Promise<PostDbDto> {
+    const dataSnap = await this.firebase.firestore.doc(`posts/${id}`).get();
+    return new PostDbDto({
+      id: dataSnap.id,
+      ...dataSnap.data(),
+    });
   }
 
   async create(postDto: PostCreateDto, userId: string) {
@@ -47,6 +60,26 @@ export class PostService {
     return new PostDbDto({
       ...post,
       id: doc.id,
+    });
+  }
+
+  async update(
+    id: string,
+    userId: string,
+    dto: PostUpdateDto,
+  ): Promise<PostDbDto> {
+    const post = await this.getOne(id);
+    if (post.toJson().userId !== userId) {
+      throw new ForbiddenException('user is not the owner');
+    }
+    const now = Timestamp.now();
+    await this.firebase.firestore.doc(`posts/${id}`).update({
+      ...dto,
+      lastUpdate: now,
+    });
+    return new PostDbDto({
+      ...post.toJson(),
+      lastUpdate: now,
     });
   }
 }

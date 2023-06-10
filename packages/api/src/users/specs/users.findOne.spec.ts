@@ -62,7 +62,7 @@ describe('/users/:id GET', () => {
       .set({ authorization: `Bearer ${token}` });
   });
 
-  it('should return 200', async () => {
+  it('/users/:id should return 200', async () => {
     const test = await request(app.getHttpServer())
       .get(`/users/${userId}`)
       .set({ authorization: `Bearer ${token}` })
@@ -77,7 +77,7 @@ describe('/users/:id GET', () => {
     expect(test.body.email).toBeUndefined();
     expect(test.body.createdAt.seconds).toBeDefined();
   });
-  it('should return 404', async () => {
+  it('/users/:id should return 404', async () => {
     return request(app.getHttpServer())
       .get(`/users/notExist`)
       .set({ authorization: `Bearer ${token}` })
