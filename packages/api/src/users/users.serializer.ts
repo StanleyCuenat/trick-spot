@@ -1,5 +1,4 @@
-import { Exclude, Transform } from 'class-transformer';
-import { Timestamp } from 'firebase-admin/firestore';
+import { Exclude } from 'class-transformer';
 
 export class UserEntity {
   id: string;

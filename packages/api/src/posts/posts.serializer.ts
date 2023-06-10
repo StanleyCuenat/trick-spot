@@ -1,5 +1,3 @@
-import { Transform } from 'class-transformer';
-
 export class PostEntity {
   id: string;
 
@@ -22,13 +20,11 @@ export class PostEntity {
 
   totalViews: number;
 
-  @Transform(({ value }) => value.seconds)
   createdAt: {
     seconds: number;
     nanoseconds: number;
   };
 
-  @Transform(({ value }) => value.seconds)
   lastUpdate: {
     seconds: number;
     nanoseconds: number;

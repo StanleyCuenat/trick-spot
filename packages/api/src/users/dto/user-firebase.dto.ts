@@ -1,5 +1,4 @@
 import * as assert from 'assert';
-import { Timestamp } from 'firebase-admin/firestore';
 
 interface FirebaseUserEntity {
   id: string;
