@@ -76,7 +76,6 @@ describe('POSTS controller CREATE', () => {
         latitude: 0,
       },
       tags: ['yolo'],
-      type: 'test',
     };
     return request(app.getHttpServer())
       .post('/posts')
@@ -97,7 +96,6 @@ describe('POSTS controller CREATE', () => {
         latitude: 0,
       },
       tags: ['yolo'],
-      type: 'test',
     };
     return request(app.getHttpServer())
       .post('/posts')
@@ -118,7 +116,6 @@ describe('POSTS controller CREATE', () => {
         latitude: 0,
       },
       tags: ['yolo'],
-      type: 'test',
     };
     return request(app.getHttpServer())
       .post('/posts')
@@ -139,7 +136,6 @@ describe('POSTS controller CREATE', () => {
         latitude: 0,
       },
       tags: ['yolo'],
-      type: 'test',
     };
     const test = await request(app.getHttpServer())
       .post('/posts')
@@ -154,7 +150,6 @@ describe('POSTS controller CREATE', () => {
     expect(test.body.geoPoint.latitude === 0).toBeTruthy();
     expect(test.body.geoPoint.longitude === 0).toBeTruthy();
     expect(test.body.tags.length === 1).toBeTruthy();
-    expect(test.body.type === 'test').toBeTruthy();
     expect(test.body.totalViews === 0).toBeTruthy();
     expect(test.body.totalComments === 0).toBeTruthy();
     expect(test.body.totalLikes === 0).toBeTruthy();

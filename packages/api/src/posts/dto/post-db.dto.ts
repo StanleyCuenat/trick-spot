@@ -11,7 +11,6 @@ export interface PostDbEntity {
     latitude: number;
   };
   tags: string[];
-  type: string;
   totalViews: number;
   totalComments: number;
   totalLikes: number;
@@ -36,7 +35,6 @@ export class PostDbDto {
     latitude: number;
   };
   private tags: string[];
-  private type: string;
   private totalViews: number;
   private totalComments: number;
   private totalLikes: number;
@@ -66,7 +64,6 @@ export class PostDbDto {
       'post latitude is not a number',
     );
     assert(Array.isArray(data.tags), 'post tags is not a string array');
-    assert(typeof data.type === 'string', 'post type is not a string');
     assert(Array.isArray(data.tags), 'post tags is not a string array');
     assert(typeof data.totalViews === 'number', 'post totalViews is not int');
     assert(
@@ -100,7 +97,6 @@ export class PostDbDto {
       latitude: (data.geoPoint as any).latitude,
     };
     this.tags = data.tags;
-    this.type = data.type;
     this.totalViews = data.totalViews;
     this.totalComments = data.totalComments;
     this.totalLikes = data.totalLikes;
@@ -123,7 +119,6 @@ export class PostDbDto {
       geoHash: this.geoHash,
       geoPoint: this.geoPoint,
       tags: this.tags,
-      type: this.type,
       totalViews: this.totalViews,
       totalComments: this.totalComments,
       totalLikes: this.totalLikes,

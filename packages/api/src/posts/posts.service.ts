@@ -73,7 +73,6 @@ export class PostService {
         postDto.geoPoint.longitude,
       ),
       tags: postDto.tags,
-      type: postDto.type,
       totalViews: 0,
       totalComments: 0,
       totalLikes: 0,

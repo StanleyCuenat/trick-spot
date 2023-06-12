@@ -66,7 +66,6 @@ describe('POSTS controller GET', () => {
         latitude: 0,
       },
       tags: ['yolo'],
-      type: 'test',
     };
     const result = await request(app.getHttpServer())
       .post('/posts')
@@ -100,7 +99,6 @@ describe('POSTS controller GET', () => {
     expect(test.body.geoPoint.latitude === 0).toBeTruthy();
     expect(test.body.geoPoint.longitude === 0).toBeTruthy();
     expect(test.body.tags.length === 1).toBeTruthy();
-    expect(test.body.type === 'test').toBeTruthy();
     expect(test.body.totalViews === 1).toBeTruthy();
     expect(test.body.totalComments === 0).toBeTruthy();
     expect(test.body.totalLikes === 0).toBeTruthy();

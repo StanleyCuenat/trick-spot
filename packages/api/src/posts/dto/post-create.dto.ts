@@ -8,7 +8,6 @@ export interface PostCreateDto {
     latitude: number;
   };
   tags: string[];
-  type: string;
 }
 
 export const postCreateSchema = Joi.object({
@@ -19,5 +18,4 @@ export const postCreateSchema = Joi.object({
     latitude: Joi.number().required(),
   }).required(),
   tags: Joi.array().items(Joi.string()).required(),
-  type: Joi.string().required(),
 });

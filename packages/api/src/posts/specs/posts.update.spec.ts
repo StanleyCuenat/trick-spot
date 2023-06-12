@@ -83,7 +83,6 @@ describe('POSTS controller UPDATE', () => {
         latitude: 0,
       },
       tags: ['yolo'],
-      type: 'test',
     };
     const result = await request(app.getHttpServer())
       .post('/posts')
@@ -105,7 +104,6 @@ describe('POSTS controller UPDATE', () => {
         latitude: 0,
       },
       tags: [],
-      type: 'string',
     };
     return request(app.getHttpServer())
       .put(`/posts/${postId}`)
@@ -129,7 +127,6 @@ describe('POSTS controller UPDATE', () => {
         latitude: 0,
       },
       tags: [],
-      type: 'string',
     };
     return request(app.getHttpServer())
       .put(`/posts/${postId}`)
@@ -149,7 +146,6 @@ describe('POSTS controller UPDATE', () => {
         latitude: 0,
       },
       tags: [],
-      type: 'string',
     };
     return request(app.getHttpServer())
       .put(`/posts/${postId}`)
@@ -167,7 +163,6 @@ describe('POSTS controller UPDATE', () => {
         latitude: 0,
       },
       tags: [],
-      type: 'string',
     };
     await new Promise((r) => setTimeout(r, 1000));
     const test = await request(app.getHttpServer())
@@ -183,7 +178,6 @@ describe('POSTS controller UPDATE', () => {
     expect(test.body.geoPoint.latitude === 0).toBeTruthy();
     expect(test.body.geoPoint.longitude === 0).toBeTruthy();
     expect(test.body.tags.length === 0).toBeTruthy();
-    expect(test.body.type === 'string').toBeTruthy();
     expect(test.body.totalViews === 0).toBeTruthy();
     expect(test.body.totalComments === 0).toBeTruthy();
     expect(test.body.totalLikes === 0).toBeTruthy();
@@ -203,7 +197,6 @@ describe('POSTS controller UPDATE', () => {
         latitude: 0,
       },
       tags: [],
-      type: 'string',
     };
     return await request(app.getHttpServer())
       .put(`/posts/dontExist`)

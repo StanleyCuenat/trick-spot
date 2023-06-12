@@ -16,8 +16,6 @@ export class PostEntity {
 
   tags: string[];
 
-  type: string;
-
   totalViews: number;
 
   totalComments: number;
