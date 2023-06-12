@@ -20,6 +20,10 @@ export class PostEntity {
 
   totalViews: number;
 
+  totalComments: number;
+
+  totalLikes: number;
+
   createdAt: {
     seconds: number;
     nanoseconds: number;

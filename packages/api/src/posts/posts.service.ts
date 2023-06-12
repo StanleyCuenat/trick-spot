@@ -2,12 +2,13 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectFirebaseAdmin } from 'src/firebase/firebase.decorator';
 import { FirebaseAdmin } from 'src/firebase/firebase.interface';
 import { PostCreateDto } from './dto/post-create.dto';
 import { PostDbDto } from './dto/post-db.dto';
-import { GeoPoint, Timestamp } from 'firebase-admin/firestore';
+import { GeoPoint, Timestamp, FieldValue } from 'firebase-admin/firestore';
 import * as geofire from 'geofire-common';
 import { PostUpdateDto } from './dto/post-update.dto';
 
@@ -20,6 +21,9 @@ export class PostService {
 
   async getOne(id: string): Promise<PostDbDto> {
     const dataSnap = await this.firebase.firestore.doc(`posts/${id}`).get();
+    if (!dataSnap.exists) {
+      throw new NotFoundException(`post ${id} not found`);
+    }
     return new PostDbDto({
       id: dataSnap.id,
       ...dataSnap.data(),
@@ -53,6 +57,8 @@ export class PostService {
       tags: postDto.tags,
       type: postDto.type,
       totalViews: 0,
+      totalComments: 0,
+      totalLikes: 0,
       createdAt: now,
       lastUpdate: now,
     };
@@ -80,6 +86,17 @@ export class PostService {
     return new PostDbDto({
       ...post.toJson(),
       lastUpdate: now,
+    });
+  }
+
+  async addView(id: string): Promise<PostDbDto> {
+    const post = await this.getOne(id);
+    await this.firebase.firestore.doc(`posts/${id}`).update({
+      totalViews: FieldValue.increment(1),
+    });
+    return new PostDbDto({
+      ...post.toJson(),
+      totalViews: post.toJson().totalViews + 1,
     });
   }
 }

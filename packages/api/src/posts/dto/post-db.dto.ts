@@ -13,6 +13,8 @@ export interface PostDbEntity {
   tags: string[];
   type: string;
   totalViews: number;
+  totalComments: number;
+  totalLikes: number;
   createdAt: {
     seconds: number;
     nanoseconds: number;
@@ -36,6 +38,8 @@ export class PostDbDto {
   private tags: string[];
   private type: string;
   private totalViews: number;
+  private totalComments: number;
+  private totalLikes: number;
   private createdAt: {
     seconds: number;
     nanoseconds: number;
@@ -66,6 +70,11 @@ export class PostDbDto {
     assert(Array.isArray(data.tags), 'post tags is not a string array');
     assert(typeof data.totalViews === 'number', 'post totalViews is not int');
     assert(
+      typeof data.totalComments === 'number',
+      'post totalComments is not int',
+    );
+    assert(typeof data.totalLikes === 'number', 'post totalLikes is not int');
+    assert(
       typeof (data.createdAt as any).seconds === 'number',
       'post createdAt seconds is not a number',
     );
@@ -93,6 +102,8 @@ export class PostDbDto {
     this.tags = data.tags;
     this.type = data.type;
     this.totalViews = data.totalViews;
+    this.totalComments = data.totalComments;
+    this.totalLikes = data.totalLikes;
     this.createdAt = {
       seconds: (data.createdAt as any).seconds,
       nanoseconds: (data.createdAt as any).nanoseconds,
@@ -114,6 +125,8 @@ export class PostDbDto {
       tags: this.tags,
       type: this.type,
       totalViews: this.totalViews,
+      totalComments: this.totalComments,
+      totalLikes: this.totalLikes,
       createdAt: this.createdAt,
       lastUpdate: this.lastUpdate,
     };

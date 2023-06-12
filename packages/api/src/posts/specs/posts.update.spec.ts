@@ -185,12 +185,31 @@ describe('POSTS controller UPDATE', () => {
     expect(test.body.tags.length === 0).toBeTruthy();
     expect(test.body.type === 'string').toBeTruthy();
     expect(test.body.totalViews === 0).toBeTruthy();
+    expect(test.body.totalComments === 0).toBeTruthy();
+    expect(test.body.totalLikes === 0).toBeTruthy();
     expect(Number.isInteger(test.body.createdAt.seconds)).toBeTruthy();
     expect(Number.isInteger(test.body.lastUpdate.seconds)).toBeTruthy();
     expect(
       test.body.lastUpdate.seconds > test.body.createdAt.seconds,
     ).toBeTruthy();
     expect(test.body.lastUpdate.seconds >= now).toBeTruthy();
+  });
+
+  it('/posts/:id PUT, should return 404 ', async () => {
+    const dto: PostUpdateDto = {
+      description: 'dont care',
+      geoPoint: {
+        longitude: 0,
+        latitude: 0,
+      },
+      tags: [],
+      type: 'string',
+    };
+    return await request(app.getHttpServer())
+      .put(`/posts/dontExist`)
+      .set({ authorization: `Bearer ${token}` })
+      .send(dto)
+      .expect(404);
   });
 
   afterAll(async () => {

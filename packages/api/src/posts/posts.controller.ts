@@ -38,4 +38,10 @@ export class PostsController {
     );
     return new PostEntity(postUpdated.toJson());
   }
+
+  @Post(':id/views')
+  async createViews(@Req() req: AuthRequest) {
+    const postViewed = await this.postService.addView(req.params.id);
+    return new PostEntity(postViewed.toJson());
+  }
 }
