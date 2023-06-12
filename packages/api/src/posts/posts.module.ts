@@ -11,6 +11,7 @@ import { UsersService } from 'src/users/users.service';
   imports: [TagsModule, UsersModule],
   controllers: [PostsController],
   providers: [PostService, TagsService, UsersService],
+  exports: [PostService],
 })
 export class PostsModule {
   configure(consumer: MiddlewareConsumer) {

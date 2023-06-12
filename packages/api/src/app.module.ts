@@ -3,6 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { FirebaseModule } from './firebase/firebase.module';
 import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
+import { PostLikesModule } from './postLikes/postLikes.module';
+import { TagsModule } from './tags/tags.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -11,6 +13,8 @@ import { PostsModule } from './posts/posts.module';
     }),
     UsersModule,
     PostsModule,
+    PostLikesModule,
+    TagsModule,
   ],
 })
 export class AppModule {}

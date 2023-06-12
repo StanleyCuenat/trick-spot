@@ -18,7 +18,7 @@ export class UsersService {
     this.firebase = firebase;
   }
 
-  private async getUser(userId: string): Promise<FirebaseUserEntityDto> {
+  async getUser(userId: string): Promise<FirebaseUserEntityDto> {
     const user = await this.firebase.firestore.doc(`users/${userId}`).get();
     if (!user.exists) {
       throw new NotFoundException(`doc ${userId} not found`);

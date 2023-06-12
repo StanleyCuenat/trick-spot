@@ -13,6 +13,7 @@ import * as geofire from 'geofire-common';
 import { PostUpdateDto } from './dto/post-update.dto';
 import { TagsService } from 'src/tags/tags.service';
 import { UsersService } from 'src/users/users.service';
+import { PostPatchDto } from './dto/post-patch.dto';
 
 @Injectable()
 export class PostService {
@@ -124,6 +125,30 @@ export class PostService {
     return new PostDbDto({
       ...post.toJson(),
       lastUpdate: now,
+    });
+  }
+
+  async patch(id: string, patchDto: PostPatchDto): Promise<PostDbDto> {
+    const post = await this.getOne(id);
+    const keyToUpdate: Record<string, FieldValue> = {};
+    if (patchDto.totalComments) {
+      keyToUpdate['totalComments'] = FieldValue.increment(
+        patchDto.totalComments,
+      );
+    }
+    if (patchDto.totalLikes) {
+      keyToUpdate['totalLikes'] = FieldValue.increment(patchDto.totalLikes);
+    }
+    console.log(keyToUpdate);
+    await this.firebase.firestore.doc(`posts/${id}`).update(keyToUpdate);
+    return new PostDbDto({
+      ...post.toJson(),
+      totalComments: patchDto.totalComments
+        ? post.toJson().totalComments + patchDto.totalComments
+        : post.toJson().totalComments,
+      totalLikes: patchDto.totalLikes
+        ? post.toJson().totalLikes + patchDto.totalLikes
+        : post.toJson().totalLikes,
     });
   }
 }
