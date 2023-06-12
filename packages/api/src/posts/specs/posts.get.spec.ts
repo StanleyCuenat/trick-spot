@@ -13,7 +13,7 @@ import { PostsModule } from '../posts.module';
 import { PostCreateDto } from '../dto/post-create.dto';
 import { readFile } from 'fs/promises';
 
-describe('POSTS VIEWS controller POST', () => {
+describe('POSTS controller GET', () => {
   let app: INestApplication;
   let userId: string;
   let token: string;
@@ -42,13 +42,13 @@ describe('POSTS VIEWS controller POST', () => {
       disableWarnings: true,
     });
     await admin.app().auth().createUser({
-      email: 'testPostViews@test.com',
+      email: 'testPostGet@test.com',
       password: '11111111',
       emailVerified: true,
     });
     const credential = await signInWithEmailAndPassword(
       getAuth(),
-      'testPostViews@test.com',
+      'testPostGet@test.com',
       '11111111',
     );
 
@@ -76,24 +76,22 @@ describe('POSTS VIEWS controller POST', () => {
     postId = result.body.id;
   });
 
-  it('/post/:id/views POST, should return 401', async () => {
-    return request(app.getHttpServer())
-      .post(`/posts/${postId}/views`)
-      .expect(401);
+  it('/post/:id GET, should return 401', async () => {
+    return request(app.getHttpServer()).get(`/posts/${postId}`).expect(401);
   });
 
-  it('/post/:id/views POST, should return 404', async () => {
+  it('/post/:id GET, should return 404', async () => {
     return request(app.getHttpServer())
-      .post(`/posts/wrongPath/views`)
+      .get(`/posts/wrongPath`)
       .set({ authorization: `Bearer ${token}` })
       .expect(404);
   });
 
-  it('/posts/:id/views POST, should return 200 with the good body', async () => {
+  it('/posts/:id GET, should return 200 with the good body', async () => {
     const test = await request(app.getHttpServer())
-      .post(`/posts/${postId}/views`)
+      .get(`/posts/${postId}`)
       .set({ authorization: `Bearer ${token}` })
-      .expect(201);
+      .expect(200);
     expect(test.body.id).toBeDefined();
     expect(test.body.userId === userId).toBeTruthy();
     expect(test.body.videoId === 'test2').toBeTruthy();
@@ -108,6 +106,11 @@ describe('POSTS VIEWS controller POST', () => {
     expect(test.body.totalLikes === 0).toBeTruthy();
     expect(Number.isInteger(test.body.createdAt.seconds)).toBeTruthy();
     expect(Number.isInteger(test.body.lastUpdate.seconds)).toBeTruthy();
+    const test2 = await request(app.getHttpServer())
+      .get(`/posts/${postId}`)
+      .set({ authorization: `Bearer ${token}` })
+      .expect(200);
+    expect(test2.body.totalViews === 2).toBeTruthy();
   });
 
   afterAll(async () => {

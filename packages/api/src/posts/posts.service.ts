@@ -30,6 +30,24 @@ export class PostService {
     });
   }
 
+  async findOne(id: string): Promise<PostDbDto> {
+    return this.firebase.firestore.runTransaction(async (t) => {
+      const ref = this.firebase.firestore.doc(`posts/${id}`);
+      const dataSnap = await t.get(ref);
+      if (!dataSnap.exists) {
+        throw new NotFoundException(`post ${id} not found`);
+      }
+      t.update(ref, {
+        totalViews: FieldValue.increment(1),
+      });
+      return new PostDbDto({
+        id: dataSnap.id,
+        ...dataSnap.data(),
+        totalViews: dataSnap.data().totalViews + 1,
+      });
+    });
+  }
+
   async create(postDto: PostCreateDto, userId: string) {
     const now = Timestamp.now();
     const videoFile = this.firebase.storage
@@ -86,17 +104,6 @@ export class PostService {
     return new PostDbDto({
       ...post.toJson(),
       lastUpdate: now,
-    });
-  }
-
-  async addView(id: string): Promise<PostDbDto> {
-    const post = await this.getOne(id);
-    await this.firebase.firestore.doc(`posts/${id}`).update({
-      totalViews: FieldValue.increment(1),
-    });
-    return new PostDbDto({
-      ...post.toJson(),
-      totalViews: post.toJson().totalViews + 1,
     });
   }
 }

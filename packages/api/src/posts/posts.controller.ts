@@ -2,6 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Get,
   Post,
   Put,
   Req,
@@ -39,9 +40,9 @@ export class PostsController {
     return new PostEntity(postUpdated.toJson());
   }
 
-  @Post(':id/views')
-  async createViews(@Req() req: AuthRequest) {
-    const postViewed = await this.postService.addView(req.params.id);
-    return new PostEntity(postViewed.toJson());
+  @Get(':id')
+  async findOne(@Req() req: AuthRequest) {
+    const post = await this.postService.findOne(req.params.id);
+    return new PostEntity(post.toJson());
   }
 }
