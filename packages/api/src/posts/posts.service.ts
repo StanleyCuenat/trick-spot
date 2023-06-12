@@ -11,11 +11,15 @@ import { PostDbDto } from './dto/post-db.dto';
 import { GeoPoint, Timestamp, FieldValue } from 'firebase-admin/firestore';
 import * as geofire from 'geofire-common';
 import { PostUpdateDto } from './dto/post-update.dto';
+import { TagService } from 'src/tags/tags.service';
 
 @Injectable()
 export class PostService {
   private readonly firebase: FirebaseAdmin;
-  constructor(@InjectFirebaseAdmin() firebase: FirebaseAdmin) {
+  constructor(
+    @InjectFirebaseAdmin() firebase: FirebaseAdmin,
+    private tagService: TagService,
+  ) {
     this.firebase = firebase;
   }
 
@@ -80,6 +84,9 @@ export class PostService {
       lastUpdate: now,
     };
     const doc = await this.firebase.firestore.collection(`posts`).add(post);
+    await Promise.all(
+      post.tags.map((tag) => this.tagService.createOrIncrement(tag)),
+    );
     return new PostDbDto({
       ...post,
       id: doc.id,
@@ -95,11 +102,21 @@ export class PostService {
     if (post.toJson().userId !== userId) {
       throw new ForbiddenException('user is not the owner');
     }
+    const removedTags = post
+      .toJson()
+      .tags.filter((tag) => !dto.tags.includes(tag));
+    const newTags = dto.tags.filter((tag) => !post.toJson().tags.includes(tag));
     const now = Timestamp.now();
     await this.firebase.firestore.doc(`posts/${id}`).update({
       ...dto,
       lastUpdate: now,
     });
+    await Promise.all(
+      removedTags.map((tag) => this.tagService.decrementTag(tag)),
+    );
+    await Promise.all(
+      newTags.map((tag) => this.tagService.createOrIncrement(tag)),
+    );
     return new PostDbDto({
       ...post.toJson(),
       lastUpdate: now,

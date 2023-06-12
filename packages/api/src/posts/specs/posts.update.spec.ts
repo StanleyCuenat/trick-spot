@@ -22,6 +22,8 @@ describe('POSTS controller UPDATE', () => {
   let wrongUserId: string;
   let token: string;
   let postId: string;
+  const tag = 'testTag';
+  const newTag = 'newTag';
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [
@@ -82,7 +84,7 @@ describe('POSTS controller UPDATE', () => {
         longitude: 0,
         latitude: 0,
       },
-      tags: ['yolo'],
+      tags: [tag],
     };
     const result = await request(app.getHttpServer())
       .post('/posts')
@@ -147,11 +149,14 @@ describe('POSTS controller UPDATE', () => {
       },
       tags: [],
     };
-    return request(app.getHttpServer())
+    await request(app.getHttpServer())
       .put(`/posts/${postId}`)
       .set({ authorization: `Bearer ${token}` })
       .send(dto)
       .expect(200);
+    const tagSnap = await admin.firestore().doc(`tags/${tag}`).get();
+    expect(tagSnap.exists === true).toBeTruthy();
+    expect(tagSnap.data().totalPost === 0).toBeTruthy();
   });
 
   it('/posts/:id PUT, should return 200 with the good body', async () => {
@@ -187,6 +192,44 @@ describe('POSTS controller UPDATE', () => {
       test.body.lastUpdate.seconds > test.body.createdAt.seconds,
     ).toBeTruthy();
     expect(test.body.lastUpdate.seconds >= now).toBeTruthy();
+  });
+
+  it('/posts/:id PUT, should return 200 with the good body', async () => {
+    const now = getUnixTime(Date.now());
+    const dto: PostUpdateDto = {
+      description: 'dont care',
+      geoPoint: {
+        longitude: 0,
+        latitude: 0,
+      },
+      tags: [newTag],
+    };
+    await new Promise((r) => setTimeout(r, 1000));
+    const test = await request(app.getHttpServer())
+      .put(`/posts/${postId}`)
+      .set({ authorization: `Bearer ${token}` })
+      .send(dto)
+      .expect(200);
+    expect(test.body.id).toBeDefined();
+    expect(test.body.userId === userId).toBeTruthy();
+    expect(test.body.videoId === 'test2').toBeTruthy();
+    expect(test.body.description).toBeDefined();
+    expect(test.body.geoHash).toBeDefined();
+    expect(test.body.geoPoint.latitude === 0).toBeTruthy();
+    expect(test.body.geoPoint.longitude === 0).toBeTruthy();
+    expect(test.body.tags.length === 0).toBeTruthy();
+    expect(test.body.totalViews === 0).toBeTruthy();
+    expect(test.body.totalComments === 0).toBeTruthy();
+    expect(test.body.totalLikes === 0).toBeTruthy();
+    expect(Number.isInteger(test.body.createdAt.seconds)).toBeTruthy();
+    expect(Number.isInteger(test.body.lastUpdate.seconds)).toBeTruthy();
+    expect(
+      test.body.lastUpdate.seconds > test.body.createdAt.seconds,
+    ).toBeTruthy();
+    expect(test.body.lastUpdate.seconds >= now).toBeTruthy();
+    const tagSnap = await admin.firestore().doc(`tags/${newTag}`).get();
+    expect(tagSnap.exists === true);
+    expect(tagSnap.data().totalPost > 0).toBeTruthy();
   });
 
   it('/posts/:id PUT, should return 404 ', async () => {

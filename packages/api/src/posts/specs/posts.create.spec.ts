@@ -155,6 +155,11 @@ describe('POSTS controller CREATE', () => {
     expect(test.body.totalLikes === 0).toBeTruthy();
     expect(Number.isInteger(test.body.createdAt.seconds)).toBeTruthy();
     expect(Number.isInteger(test.body.lastUpdate.seconds)).toBeTruthy();
+    const tagSnap = await admin
+      .firestore()
+      .doc(`tags/${test.body.tags[0]}`)
+      .get();
+    expect(tagSnap.exists === true).toBeTruthy();
   });
 
   afterAll(async () => {
