@@ -11,14 +11,16 @@ import { PostDbDto } from './dto/post-db.dto';
 import { GeoPoint, Timestamp, FieldValue } from 'firebase-admin/firestore';
 import * as geofire from 'geofire-common';
 import { PostUpdateDto } from './dto/post-update.dto';
-import { TagService } from 'src/tags/tags.service';
+import { TagsService } from 'src/tags/tags.service';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class PostService {
   private readonly firebase: FirebaseAdmin;
   constructor(
     @InjectFirebaseAdmin() firebase: FirebaseAdmin,
-    private tagService: TagService,
+    private tagService: TagsService,
+    private usersService: UsersService,
   ) {
     this.firebase = firebase;
   }
@@ -54,6 +56,7 @@ export class PostService {
 
   async create(postDto: PostCreateDto, userId: string) {
     const now = Timestamp.now();
+    const user = await this.usersService.findOne(userId);
     const videoFile = this.firebase.storage
       .bucket()
       .file(`users/${userId}/videos/${postDto.videoId}`);
@@ -66,6 +69,7 @@ export class PostService {
     }
     const post = {
       userId: userId,
+      username: user.toJson().nickname,
       videoId: postDto.videoId,
       description: postDto.description,
       geoHash: geofire.geohashForLocation([

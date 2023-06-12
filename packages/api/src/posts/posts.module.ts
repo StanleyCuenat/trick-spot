@@ -2,13 +2,15 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AuthMiddleware } from 'src/auth/auth.middleware';
 import { PostsController } from './posts.controller';
 import { PostService } from './posts.service';
-import { TagService } from 'src/tags/tags.service';
-import { TagModule } from 'src/tags/tags.module';
+import { TagsService } from 'src/tags/tags.service';
+import { TagsModule } from 'src/tags/tags.module';
+import { UsersModule } from 'src/users/users.module';
+import { UsersService } from 'src/users/users.service';
 
 @Module({
-  imports: [TagModule],
+  imports: [TagsModule, UsersModule],
   controllers: [PostsController],
-  providers: [PostService, TagService],
+  providers: [PostService, TagsService, UsersService],
 })
 export class PostsModule {
   configure(consumer: MiddlewareConsumer) {

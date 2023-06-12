@@ -3,6 +3,8 @@ export class PostEntity {
 
   userId: string;
 
+  username: string;
+
   videoId: string;
 
   description: string;

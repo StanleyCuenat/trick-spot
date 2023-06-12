@@ -14,6 +14,8 @@ import { PostCreateDto } from '../dto/post-create.dto';
 import { readFile } from 'fs/promises';
 import { PostUpdateDto } from '../dto/post-update.dto';
 import { getUnixTime } from 'date-fns';
+import { UserCreateDto } from 'src/users/dto/user-create.dto';
+import { UsersModule } from 'src/users/users.module';
 
 describe('POSTS controller UPDATE', () => {
   let app: INestApplication;
@@ -31,6 +33,7 @@ describe('POSTS controller UPDATE', () => {
           storageBucket: 'gs://trickspot-20ae3.appspot.com',
         }),
         PostsModule,
+        UsersModule,
       ],
     }).compile();
     app = moduleRef.createNestApplication();
@@ -74,6 +77,16 @@ describe('POSTS controller UPDATE', () => {
     wrongUserId = wrongCredential.user.uid;
     wrongUserToken = await wrongCredential.user.getIdToken();
     await app.init();
+    const userDto: UserCreateDto = {
+      nickname: 'testUser',
+      description: 'test description',
+      links: [],
+    };
+    await request(app.getHttpServer())
+      .post('/users')
+      .send(userDto)
+      .set({ authorization: `Bearer ${token}` })
+      .expect(201);
     const file = admin.storage().bucket().file(`users/${userId}/videos/test2`);
     const img = await readFile(`${__dirname}/assets/good.jpeg`);
     await file.save(img, { contentType: 'images/jpeg' });
@@ -211,6 +224,7 @@ describe('POSTS controller UPDATE', () => {
       .send(dto)
       .expect(200);
     expect(test.body.id).toBeDefined();
+    expect(test.body.username).toBeDefined();
     expect(test.body.userId === userId).toBeTruthy();
     expect(test.body.videoId === 'test2').toBeTruthy();
     expect(test.body.description).toBeDefined();

@@ -5,7 +5,7 @@ import { TagDbDto } from './dto/tag-db.dto';
 import { FieldValue } from 'firebase-admin/firestore';
 
 @Injectable()
-export class TagService {
+export class TagsService {
   private readonly firebase: FirebaseAdmin;
   constructor(@InjectFirebaseAdmin() firebase: FirebaseAdmin) {
     this.firebase = firebase;

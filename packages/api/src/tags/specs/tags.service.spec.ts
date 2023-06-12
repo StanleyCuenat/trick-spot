@@ -1,23 +1,23 @@
 import { Test } from '@nestjs/testing';
 import { FirebaseModule } from 'src/firebase/firebase.module';
-import { TagModule } from '../tags.module';
+import { TagsModule } from '../tags.module';
 import { INestApplication } from '@nestjs/common';
-import { TagService } from '../tags.service';
+import { TagsService } from '../tags.service';
 
 describe('CREATE TAG', () => {
   let app: INestApplication;
-  let tagService: TagService;
+  let tagService: TagsService;
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [
         FirebaseModule.forRoot('./googleApplicationCredentials.json', {
           storageBucket: 'gs://trickspot-20ae3.appspot.com',
         }),
-        TagModule,
+        TagsModule,
       ],
     }).compile();
     app = moduleRef.createNestApplication();
-    tagService = app.get<TagService>(TagService);
+    tagService = app.get<TagsService>(TagsService);
   });
 
   it('should create and return a valid TagDbDto', async () => {

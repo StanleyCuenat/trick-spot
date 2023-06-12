@@ -3,6 +3,7 @@ import * as assert from 'assert';
 export interface PostDbEntity {
   id: string;
   userId: string;
+  username: string;
   videoId: string;
   description: string;
   geoHash: string;
@@ -27,6 +28,7 @@ export interface PostDbEntity {
 export class PostDbDto {
   private id: string;
   private userId: string;
+  private username: string;
   private videoId: string;
   private description: string;
   private geoHash: string;
@@ -49,6 +51,7 @@ export class PostDbDto {
   constructor(data: Record<string, unknown>) {
     assert(typeof data.id === 'string', 'post id is not a string');
     assert(typeof data.userId === 'string', 'post userId is not a string');
+    assert(typeof data.username === 'string', 'post username is not a string');
     assert(typeof data.videoId === 'string', 'post videoId is not a string');
     assert(
       typeof data.description === 'string',
@@ -89,6 +92,7 @@ export class PostDbDto {
     );
     this.id = data.id;
     this.userId = data.userId;
+    this.username = data.username;
     this.videoId = data.videoId;
     this.description = data.description;
     this.geoHash = data.geoHash;
@@ -114,6 +118,7 @@ export class PostDbDto {
     return {
       id: this.id,
       userId: this.userId,
+      username: this.username,
       videoId: this.videoId,
       description: this.description,
       geoHash: this.geoHash,
