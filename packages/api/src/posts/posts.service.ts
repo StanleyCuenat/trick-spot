@@ -131,21 +131,12 @@ export class PostService {
   async patch(id: string, patchDto: PostPatchDto): Promise<PostDbDto> {
     const post = await this.getOne(id);
     const keyToUpdate: Record<string, FieldValue> = {};
-    if (patchDto.totalComments) {
-      keyToUpdate['totalComments'] = FieldValue.increment(
-        patchDto.totalComments,
-      );
-    }
     if (patchDto.totalLikes) {
       keyToUpdate['totalLikes'] = FieldValue.increment(patchDto.totalLikes);
     }
-    console.log(keyToUpdate);
     await this.firebase.firestore.doc(`posts/${id}`).update(keyToUpdate);
     return new PostDbDto({
       ...post.toJson(),
-      totalComments: patchDto.totalComments
-        ? post.toJson().totalComments + patchDto.totalComments
-        : post.toJson().totalComments,
       totalLikes: patchDto.totalLikes
         ? post.toJson().totalLikes + patchDto.totalLikes
         : post.toJson().totalLikes,

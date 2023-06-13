@@ -78,7 +78,7 @@ describe('POSTS controller GET', () => {
         longitude: 0,
         latitude: 0,
       },
-      tags: ['yolo'],
+      tags: ['yolo3'],
     };
     const result = await request(app.getHttpServer())
       .post('/posts')

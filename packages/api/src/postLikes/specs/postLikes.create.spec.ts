@@ -112,7 +112,6 @@ describe('CREATE POST LIKE', () => {
     expect(test.body.username === 'testUserLikePost').toBeTruthy();
     expect(test.body.createdAt.seconds).toBeDefined();
     const post = await admin.firestore().doc(`posts/${postId}`).get();
-    console.log(post.data());
     expect(post.data().totalLikes === 1).toBeTruthy();
   });
   afterAll(async () => {
