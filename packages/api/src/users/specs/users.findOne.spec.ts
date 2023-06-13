@@ -70,6 +70,7 @@ describe('/users/:id GET', () => {
     expect(test.body.id === userId).toBeTruthy();
     expect(test.body.nickname === 'GET').toBeTruthy();
     expect(test.body.description === 'GET').toBeTruthy();
+    expect(test.body.totalFollower === 0).toBeTruthy();
     expect(Array.isArray(test.body.links)).toBeTruthy();
     expect(Number.isInteger(test.body.lastConnection.seconds)).toBeTruthy();
     expect(Number.isInteger(test.body.lastUpdate.seconds)).toBeTruthy();

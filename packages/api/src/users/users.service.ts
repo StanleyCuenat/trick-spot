@@ -8,8 +8,8 @@ import { FirebaseAdmin } from 'src/firebase/firebase.interface';
 import { UserCreateDto } from './dto/user-create.dto';
 import { UserUpdateDto } from './dto/user-update.dto';
 import { UserPatchDto } from './dto/user-patch.dto';
-import { Timestamp } from 'firebase-admin/firestore';
-import { FirebaseUserEntityDto } from './dto/user-firebase.dto';
+import { FieldValue, Timestamp } from 'firebase-admin/firestore';
+import { UserDbDto } from './dto/user-db.dto';
 
 @Injectable()
 export class UsersService {
@@ -18,21 +18,18 @@ export class UsersService {
     this.firebase = firebase;
   }
 
-  async getUser(userId: string): Promise<FirebaseUserEntityDto> {
+  async getUser(userId: string): Promise<UserDbDto> {
     const user = await this.firebase.firestore.doc(`users/${userId}`).get();
     if (!user.exists) {
       throw new NotFoundException(`doc ${userId} not found`);
     }
-    return new FirebaseUserEntityDto({
+    return new UserDbDto({
       id: user.id,
       ...user.data(),
     });
   }
 
-  async create(
-    userDto: UserCreateDto,
-    id: string,
-  ): Promise<FirebaseUserEntityDto> {
+  async create(userDto: UserCreateDto, id: string): Promise<UserDbDto> {
     const now = Timestamp.now();
     const doc = await this.firebase.firestore.doc(`users/${id}`).get();
     const authUser = await this.firebase.auth.getUser(id);
@@ -44,15 +41,17 @@ export class UsersService {
     }
     await this.firebase.firestore.doc(`users/${id}`).create({
       ...userDto,
+      totalFollower: 0,
       banished: false,
       lastConnection: now,
       lastUpdate: now,
       createdAt: now,
       email: authUser.email,
     });
-    return new FirebaseUserEntityDto({
+    return new UserDbDto({
       id: id,
       ...userDto,
+      totalFollower: 0,
       banished: false,
       lastConnection: now,
       lastUpdate: now,
@@ -61,17 +60,14 @@ export class UsersService {
     });
   }
 
-  async update(
-    userDto: UserUpdateDto,
-    userId: string,
-  ): Promise<FirebaseUserEntityDto> {
+  async update(userDto: UserUpdateDto, userId: string): Promise<UserDbDto> {
     const now = Timestamp.now();
     const user = await this.getUser(userId);
     await this.firebase.firestore.doc(`users/${userId}`).update({
       ...userDto,
       lastUpdate: now,
     });
-    return new FirebaseUserEntityDto({
+    return new UserDbDto({
       ...user,
       ...userDto,
     });
@@ -109,9 +105,15 @@ export class UsersService {
     });
     const user = await this.getUser(userId);
     await this.firebase.firestore.doc(`users/${userId}`).update(finalUserDto);
-    return new FirebaseUserEntityDto({
+    return new UserDbDto({
       ...user,
       ...finalUserDto,
+    });
+  }
+
+  async updateTotalFollower(userId: string, value: 1 | -1): Promise<void> {
+    await this.firebase.firestore.doc(`users/${userId}`).update({
+      totalFollower: FieldValue.increment(value),
     });
   }
 }

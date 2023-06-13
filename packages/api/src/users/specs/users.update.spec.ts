@@ -94,6 +94,7 @@ describe('Users controller UPDATE ', () => {
     expect(test.body.id === userId).toBeTruthy();
     expect(test.body.nickname === 'testUserUpdated').toBeTruthy();
     expect(test.body.description === 'test description updated').toBeTruthy();
+    expect(test.body.totalFollower === 0).toBeTruthy();
     expect(Array.isArray(test.body.links)).toBeTruthy();
     expect(test.body.links.length === 1).toBeTruthy();
     expect(Number.isInteger(test.body.lastConnection.seconds)).toBeTruthy();

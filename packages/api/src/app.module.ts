@@ -5,6 +5,7 @@ import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { PostLikesModule } from './postLikes/postLikes.module';
 import { TagsModule } from './tags/tags.module';
+import { FollowersModule } from './followers/followers.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -15,6 +16,7 @@ import { TagsModule } from './tags/tags.module';
     PostsModule,
     PostLikesModule,
     TagsModule,
+    FollowersModule,
   ],
 })
 export class AppModule {}

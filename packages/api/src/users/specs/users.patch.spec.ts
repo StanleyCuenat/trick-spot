@@ -106,6 +106,7 @@ describe('Users controller PATCH ', () => {
     expect(test.body.id === userId).toBeTruthy();
     expect(test.body.nickname).toBeDefined();
     expect(test.body.description).toBeDefined();
+    expect(test.body.totalFollower === 0).toBeTruthy();
     expect(Array.isArray(test.body.links)).toBeTruthy();
     expect(Number.isInteger(test.body.lastConnection.seconds)).toBeTruthy();
     expect(Number.isInteger(test.body.lastUpdate.seconds)).toBeTruthy();

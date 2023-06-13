@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Timestamp } from 'firebase-admin/firestore';
 import { InjectFirebaseAdmin } from 'src/firebase/firebase.decorator';
 import { FirebaseAdmin } from 'src/firebase/firebase.interface';
@@ -32,6 +36,15 @@ export class PostLikesService {
 
   async create(postId: string, userId: string): Promise<PostLikeDbDto> {
     const now = Timestamp.now();
+    const postLikeDoc = await this.firebase.firestore
+      .doc(`postLikes/${postId}_${userId}`)
+      .get();
+    if (postLikeDoc.exists) {
+      throw new BadRequestException({
+        id: `${postId}_${userId}`,
+        error: 'already exists',
+      });
+    }
     const post = await this.postService.getOne(postId);
     const user = await this.userService.getUser(userId);
     await this.firebase.firestore.doc(`postLikes/${postId}_${userId}`).set(

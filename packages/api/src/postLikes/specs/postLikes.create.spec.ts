@@ -114,6 +114,14 @@ describe('CREATE POST LIKE', () => {
     const post = await admin.firestore().doc(`posts/${postId}`).get();
     expect(post.data().totalLikes === 1).toBeTruthy();
   });
+  it('should return 400 already exists', async () => {
+    await request(app.getHttpServer())
+      .post(`/posts/${postId}/likes`)
+      .set({ authorization: `Bearer ${token}` })
+      .expect(400);
+    const post = await admin.firestore().doc(`posts/${postId}`).get();
+    expect(post.data().totalLikes === 1).toBeTruthy();
+  });
   afterAll(async () => {
     if (userId) {
       admin.auth().deleteUser(userId);
